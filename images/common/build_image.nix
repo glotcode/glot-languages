@@ -5,7 +5,7 @@ let
     builtins.fetchGit {
       url = "git@github.com:glotcode/code-runner.git";
       ref = "main";
-      rev = "cd48dde66a6218d6db919db883ced959a8786a4b";
+      rev = "1c23ff456cdbef82eacb1a23c0e57900f9e17432";
     };
 
   codeRunner =
@@ -36,8 +36,8 @@ let
   ];
 in
 pkgs.dockerTools.buildImage {
-  name = "glot/python";
-  tag = "beta";
+  name = name;
+  tag = tag;
   created = "now";
 
   contents =
@@ -51,6 +51,8 @@ pkgs.dockerTools.buildImage {
     #!/bin/bash
     ${pkgs.shadow}/bin/groupadd glot
     ${pkgs.shadow}/bin/useradd -m -d /home/glot -g glot -s /bin/bash glot
+    ${pkgs.coreutils}/bin/mkdir /tmp
+    ${pkgs.coreutils}/bin/chmod 1777 /tmp
     ${runCommands}
   '';
 
