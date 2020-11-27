@@ -31,8 +31,6 @@ let
 
   commonPackages = [
     pkgs.bash
-    pkgs.coreutils
-    pkgs.shadow
   ];
 in
 pkgs.dockerTools.buildImage {
@@ -48,7 +46,7 @@ pkgs.dockerTools.buildImage {
     ];
 
   runAsRoot = ''
-    #!/bin/bash
+    ${pkgs.stdenv.shell}
     ${pkgs.shadow}/bin/groupadd glot
     ${pkgs.shadow}/bin/useradd -m -d /home/glot -g glot -s /bin/bash glot
     ${pkgs.coreutils}/bin/mkdir /tmp
