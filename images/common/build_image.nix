@@ -5,29 +5,11 @@ let
     builtins.fetchGit {
       url = "git@github.com:glotcode/code-runner.git";
       ref = "main";
-      rev = "fff708b4f9d35c8249f2a77e153b007286f759eb";
+      rev = "b70654a1a7e1e03e53b6a45f6a7b6adc09e1abe0";
     };
 
   codeRunner =
     (import "${codeRunnerSrc}/Cargo.nix" { pkgs = pkgs; }).rootCrate.build;
-
-  initializeShadow = [
-    (pkgs.writeTextDir "etc/shadow" ''
-      root:!x:::::::
-    '')
-
-    (pkgs.writeTextDir "etc/passwd" ''
-      root:x:0:0::/root:/dev/null
-    '')
-
-    (pkgs.writeTextDir "etc/group" ''
-      root:x:0:
-    '')
-
-    (pkgs.writeTextDir "etc/gshadow" ''
-      root:x::
-    '')
-  ];
 
   commonPackages = [
     pkgs.bash
@@ -40,13 +22,13 @@ pkgs.dockerTools.buildImage {
 
   contents =
     pkgs.lib.concatLists [
-      initializeShadow
       commonPackages
       installedPackages
     ];
 
   runAsRoot = ''
     ${pkgs.stdenv.shell}
+    ${pkgs.dockerTools.shadowSetup}
     ${pkgs.shadow}/bin/groupadd glot
     ${pkgs.shadow}/bin/useradd -m -d /home/glot -g glot -s /bin/bash glot
     ${pkgs.coreutils}/bin/mkdir /tmp
