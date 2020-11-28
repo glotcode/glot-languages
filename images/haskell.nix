@@ -1,9 +1,9 @@
 let
-  nixpkgs =
-    builtins.fetchGit (builtins.fromJSON (builtins.readFile ./common/nixpkgs.json));
-
   pkgs =
-    import nixpkgs {};
+    import ./common/nixpkgs.nix;
+
+  build_image =
+    import ./common/build_image.nix;
 
   haskellPackages =
     pkgs.haskellPackages.ghcWithPackages (ps: [
@@ -46,9 +46,6 @@ let
       ps.xhtml
       ps.zlib
     ]);
-
-  build_image =
-    import ./common/build_image.nix;
 in
 build_image {
   pkgs = pkgs;

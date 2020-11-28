@@ -1,9 +1,6 @@
 let
-  nixpkgs =
-    builtins.fetchGit (builtins.fromJSON (builtins.readFile ./common/nixpkgs.json));
-
   pkgs =
-    import nixpkgs {};
+    import ./common/nixpkgs.nix;
 
   build_image =
     import ./common/build_image.nix;
