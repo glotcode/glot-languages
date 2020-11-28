@@ -6,7 +6,7 @@ let
     import ./common/build_image.nix;
 
   deps =
-    import ./clojure/deps.nix {};
+    import ./clojure/deps.nix { pkgs = pkgs; };
 in
 build_image {
   pkgs = pkgs;
