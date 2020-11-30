@@ -18,7 +18,6 @@ build_image {
   installedPackages = [
     pkgs.elmPackages.elm
     pkgs.nodejs
-    pkgs.coreutils
     elmRunner
   ];
   runCommands = ''
