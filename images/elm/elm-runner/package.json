@@ -1,0 +1,15 @@
+{
+  "name": "elm-runner",
+  "version": "1.0.0",
+  "description": "",
+  "main": "elm-runner.js",
+  "bin": "elm-runner.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "jsdom": "^16.4.0"
+  }
+}
