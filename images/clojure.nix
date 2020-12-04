@@ -15,8 +15,8 @@ build_image {
   installedPackages = [
     pkgs.clojure
   ];
-  runCommands = ''
-    ## Install dependencies
+  run = ''
+    # Install dependencies
     ${pkgs.gnutar}/bin/tar -xf ${deps}/deps.tar -C /home/glot
     ${pkgs.coreutils}/bin/chown -R glot:glot /home/glot
   '';

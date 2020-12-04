@@ -1,4 +1,4 @@
-{ pkgs, name, tag, installedPackages, runCommands ? "", env ? [] }:
+{ pkgs, name, tag, installedPackages, run ? "", env ? [] }:
 
 let
   codeRunnerSrc =
@@ -39,7 +39,7 @@ pkgs.dockerTools.buildImage {
     ${pkgs.shadow}/bin/useradd -m -d /home/glot -g glot -s /bin/bash glot
     ${pkgs.coreutils}/bin/mkdir /tmp
     ${pkgs.coreutils}/bin/chmod 1777 /tmp
-    ${runCommands}
+    ${run}
   '';
 
   config = {

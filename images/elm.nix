@@ -20,7 +20,7 @@ build_image {
     pkgs.nodejs
     elmRunner
   ];
-  runCommands = ''
+  run = ''
     # Prepare elm project
     ${pkgs.gnutar}/bin/tar -xf ${projectFiles}/project.tar -C /home/glot
     ${pkgs.coreutils}/bin/chown -R glot:glot /home/glot
