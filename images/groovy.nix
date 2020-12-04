@@ -10,7 +10,6 @@ build_image {
   name = "glot/groovy";
   tag = "latest";
   installedPackages = [
-    pkgs.coreutils
     pkgs.gawk
     pkgs.groovy
   ];

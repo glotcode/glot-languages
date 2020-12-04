@@ -10,7 +10,6 @@ build_image {
   name = "glot/idris";
   tag = "latest";
   installedPackages = [
-    pkgs.coreutils
     pkgs.idris2
   ];
 }

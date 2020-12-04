@@ -13,6 +13,7 @@ let
 
   commonPackages = [
     pkgs.bash
+    pkgs.coreutils
     pkgs.glibcLocales
   ];
 

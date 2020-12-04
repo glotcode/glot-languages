@@ -9,7 +9,5 @@ build_image {
   pkgs = pkgs;
   name = "glot/bash";
   tag = "latest";
-  installedPackages = [
-    pkgs.coreutils
-  ];
+  installedPackages = [];
 }
