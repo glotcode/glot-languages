@@ -1,4 +1,4 @@
-{ pkgs, name, tag, installedPackages, runCommands ? "" }:
+{ pkgs, name, tag, installedPackages, runCommands ? "", env ? [] }:
 
 let
   codeRunnerSrc =
@@ -14,6 +14,11 @@ let
   commonPackages = [
     pkgs.bash
     pkgs.glibcLocales
+  ];
+
+  commonEnv = [
+    "LANG=en_US.UTF-8"
+    "LOCALE_ARCHIVE=${pkgs.glibcLocales}/lib/locale/locale-archive"
   ];
 in
 pkgs.dockerTools.buildImage {
@@ -38,10 +43,11 @@ pkgs.dockerTools.buildImage {
   '';
 
   config = {
-    Env = [
-      "LANG=en_US.UTF-8"
-      "LOCALE_ARCHIVE=${pkgs.glibcLocales}/lib/locale/locale-archive"
-    ];
+    Env =
+      pkgs.lib.concatLists [
+        commonEnv
+        env
+      ];
 
     Cmd = [ "${codeRunner}/bin/code-runner" "--path" "/home/glot"];
   };
