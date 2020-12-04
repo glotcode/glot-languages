@@ -13,6 +13,7 @@ let
 
   commonPackages = [
     pkgs.bash
+    pkgs.glibcLocales
   ];
 in
 pkgs.dockerTools.buildImage {
@@ -37,6 +38,11 @@ pkgs.dockerTools.buildImage {
   '';
 
   config = {
+    Env = [
+      "LANG=en_US.UTF-8"
+      "LOCALE_ARCHIVE=${pkgs.glibcLocales}/lib/locale/locale-archive"
+    ];
+
     Cmd = [ "${codeRunner}/bin/code-runner" "--path" "/home/glot"];
   };
 }
