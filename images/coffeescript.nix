@@ -13,6 +13,6 @@ build_image {
     pkgs.nodePackages.coffee-script
   ];
   env = [
-    "PATH=${pkgs.bash}/bin/:${pkgs.nodePackages.coffee-script}/bin/"
+    "PATH=${pkgs.nodePackages.coffee-script}/bin/:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
   ];
 }
