@@ -33,6 +33,8 @@ pkgs.dockerTools.buildImage {
       installedPackages
     ];
 
+  diskSize = 8192;
+
   runAsRoot = ''
     ${pkgs.stdenv.shell}
     ${pkgs.dockerTools.shadowSetup}
