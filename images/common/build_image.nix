@@ -1,4 +1,12 @@
-{ pkgs, name, tag, installedPackages, run ? "", env ? [] }:
+{
+  pkgs,
+  name,
+  tag,
+  installedPackages,
+  run ? "",
+  env ? [],
+  keepContentsDirlinks ? false
+}:
 
 let
   codeRunnerSrc =
@@ -34,6 +42,7 @@ pkgs.dockerTools.buildImage {
     ];
 
   diskSize = 8192;
+  keepContentsDirlinks = keepContentsDirlinks;
 
   runAsRoot = ''
     ${pkgs.stdenv.shell}
