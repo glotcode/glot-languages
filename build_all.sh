@@ -1,21 +1,20 @@
 #!/usr/bin/env bash
 
 mkdir -p result
-nix-build --out-link result/python images/python.nix
-nix-build --out-link result/haskell images/haskell.nix
 nix-build --out-link result/assembly images/assembly.nix
 nix-build --out-link result/ats images/ats.nix
 nix-build --out-link result/bash images/bash.nix
+nix-build --out-link result/coffeescript images/coffeescript.nix
 nix-build --out-link result/clang images/clang.nix
 nix-build --out-link result/clojure images/clojure.nix
-nix-build --out-link result/elm images/elm.nix
 nix-build --out-link result/crystal images/crystal.nix
 nix-build --out-link result/dlang images/dlang.nix
 nix-build --out-link result/elixir images/elixir.nix
-nix-build --out-link result/coffeescript images/coffeescript.nix
+nix-build --out-link result/elm images/elm.nix
 nix-build --out-link result/erlang images/erlang.nix
 nix-build --out-link result/golang images/golang.nix
 nix-build --out-link result/groovy images/groovy.nix
+nix-build --out-link result/haskell images/haskell.nix
 nix-build --out-link result/idris images/idris.nix
 nix-build --out-link result/java images/java.nix
 nix-build --out-link result/javascript images/javascript.nix
@@ -29,6 +28,7 @@ nix-build --out-link result/nim images/nim.nix
 nix-build --out-link result/ocaml images/ocaml.nix
 nix-build --out-link result/perl images/perl.nix
 nix-build --out-link result/php images/php.nix
+nix-build --out-link result/python images/python.nix
 nix-build --out-link result/raku images/raku.nix
 nix-build --out-link result/ruby images/ruby.nix
 nix-build --out-link result/rust images/rust.nix
