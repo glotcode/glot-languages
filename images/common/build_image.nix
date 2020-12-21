@@ -15,12 +15,10 @@ let
   commonPackages = [
     pkgs.bash
     pkgs.coreutils
-    pkgs.glibcLocales
   ];
 
   commonEnv = [
-    "LANG=en_US.UTF-8"
-    "LOCALE_ARCHIVE=${pkgs.glibcLocales}/lib/locale/locale-archive"
+    "LANG=C.UTF-8"
   ];
 in
 pkgs.dockerTools.buildImage {
