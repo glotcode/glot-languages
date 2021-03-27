@@ -1,0 +1,11 @@
+{
+  "name": "glot-node-modules",
+  "version": "1.0.0",
+  "main": "main.js",
+  "license": "MIT",
+  "dependencies": {
+    "axios": "^0.21.1",
+    "jest": "^26.6.3",
+    "lodash": "^4.17.21"
+  }
+}
