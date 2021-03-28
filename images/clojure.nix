@@ -5,8 +5,8 @@ let
   build_image =
     import ./common/build_image.nix;
 
-  deps =
-    import ./clojure/deps.nix { pkgs = pkgs; };
+  bootstrap =
+    import ./clojure/bootstrap.nix { pkgs = pkgs; };
 in
 build_image {
   pkgs = pkgs;
@@ -14,11 +14,11 @@ build_image {
   tag = "latest";
   installedPackages = [
     pkgs.clojure
+    pkgs.gnutar
     pkgs.gzip
   ];
   run = ''
-    # Install dependencies
-    ${pkgs.gnutar}/bin/tar -zxf ${deps}/deps.tar.gz -C /home/glot
-    ${pkgs.coreutils}/bin/chown -R glot:glot /home/glot
+    # Prepare bootstrap file
+    cp ${bootstrap}/bootstrap.tar.gz /
   '';
 }

@@ -8,8 +8,8 @@ let
   elmRunner =
     import ./elm/elm-runner/default.nix { pkgs = pkgs; };
 
-  projectFiles =
-    import ./elm/project.nix { pkgs = pkgs; };
+  bootstrap =
+    import ./elm/bootstrap.nix { pkgs = pkgs; };
 in
 build_image {
   pkgs = pkgs;
@@ -18,11 +18,12 @@ build_image {
   installedPackages = [
     pkgs.elmPackages.elm
     pkgs.nodejs
+    pkgs.gnutar
+    pkgs.gzip
     elmRunner
   ];
   run = ''
-    # Prepare elm project
-    ${pkgs.gnutar}/bin/tar -xf ${projectFiles}/project.tar -C /home/glot
-    ${pkgs.coreutils}/bin/chown -R glot:glot /home/glot
+    # Prepare bootstrap file
+    cp ${bootstrap}/bootstrap.tar.gz /
   '';
 }
