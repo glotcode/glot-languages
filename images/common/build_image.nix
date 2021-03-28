@@ -39,9 +39,7 @@ pkgs.dockerTools.buildImage {
     ${pkgs.stdenv.shell}
     ${pkgs.dockerTools.shadowSetup}
     ${pkgs.shadow}/bin/groupadd glot
-    ${pkgs.shadow}/bin/useradd -m -d /home/glot -g glot -s /bin/bash glot
-    ${pkgs.coreutils}/bin/mkdir /tmp
-    ${pkgs.coreutils}/bin/chmod 1777 /tmp
+    ${pkgs.shadow}/bin/useradd -d /home/glot -g glot -s /bin/bash glot
     ${run}
   '';
 
