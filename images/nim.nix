@@ -10,6 +10,7 @@ build_image {
   name = "glot/nim";
   tag = "latest";
   installedPackages = [
+    pkgs.gcc
     pkgs.nim
   ];
 }
