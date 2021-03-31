@@ -7,10 +7,10 @@ The file is unpacked into to the work dir by the code-runner.
 ###  Steps to make bootstrap.tar.gz
 ```
 * docker run -u glot --rm -t -i glot/clojure:latest /bin/bash
-* cd /run
+* cd /home/glot
 * rm -rf .m2
 * echo '(println 42)' | clj
 
 # Outside container: 
-* docker cp -a '<containerid>:/run/.m2' - | gzip > bootstrap.tar.gz
+* docker cp -a '<containerid>:/home/glot/.m2' - | gzip > bootstrap.tar.gz
 ```

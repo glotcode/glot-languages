@@ -39,7 +39,7 @@ pkgs.dockerTools.buildImage {
     ${pkgs.stdenv.shell}
     ${pkgs.dockerTools.shadowSetup}
     ${pkgs.shadow}/bin/groupadd glot
-    ${pkgs.shadow}/bin/useradd -d /run -g glot -s /bin/bash glot
+    ${pkgs.shadow}/bin/useradd -d /home/glot -g glot -s /bin/bash glot
     ${run}
   '';
 
@@ -50,6 +50,6 @@ pkgs.dockerTools.buildImage {
         env
       ];
 
-    Cmd = [ "${codeRunner}/bin/code-runner" "--path" "/run"];
+    Cmd = [ "${codeRunner}/bin/code-runner" "--path" "/home/glot"];
   };
 }
