@@ -12,8 +12,10 @@ let
       ps.attoparsec
       ps.case-insensitive
       ps.cgi
+      ps.clock
       ps.exceptions
       ps.fgl
+      ps.formatting
       ps.free
       ps.hashable
       ps.html
