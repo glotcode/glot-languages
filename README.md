@@ -8,3 +8,21 @@ Prebuilt images can be found on [Docker Hub](https://hub.docker.com/u/glot).
 See the [overview](https://github.com/glotcode/glot) on how everything is connected.
 
 (If nix is unfamiliar you can find some examples using Dockerfile [here](https://github.com/prasmussen/glot-containers))
+
+
+## Example
+
+```bash
+echo '{                                                                                                                                                                                                                                                                                                        ~
+  "language": "javascript",
+  "files": [{
+    "name": "main.js",
+    "content": "console.log(\"Hello World!\");"
+  }]
+}' | docker run -i --rm glot/javascript:latest
+```
+
+##### Result
+```json
+{"stdout":"Hello World!\n","stderr":"","error":""}
+```
