@@ -35,6 +35,7 @@ nix-build --out-link result/python images/python.nix
 nix-build --out-link result/raku images/raku.nix
 nix-build --out-link result/ruby images/ruby.nix
 nix-build --out-link result/rust images/rust.nix
+nix-build --out-link result/sac images/sac.nix
 nix-build --out-link result/scala images/scala.nix
 nix-build --out-link result/swift images/swift.nix
 nix-build --out-link result/mercury images/mercury.nix
