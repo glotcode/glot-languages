@@ -23,7 +23,7 @@ echo '{
     "name": "main.js",
     "content": "console.log(\"Hello World!\");"
   }]
-}' | docker run -i --rm glot/javascript:latest
+}' | docker run --rm -i --read-only --tmpfs /tmp:rw,noexec,nosuid,size=65536k --tmpfs /home/glot:rw,exec,nosuid,uid=1000,gid=1000,size=131072k -u glot -w /home/glot glot/javascript:latest
 ```
 
 ##### Result
