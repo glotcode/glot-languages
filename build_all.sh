@@ -40,3 +40,4 @@ nix-build --out-link result/scala images/scala.nix
 nix-build --out-link result/swift images/swift.nix
 nix-build --out-link result/mercury images/mercury.nix
 nix-build --out-link result/typescript images/typescript.nix
+nix-build --out-link result/zig images/zig.nix
