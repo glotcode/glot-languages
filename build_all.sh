@@ -30,6 +30,7 @@ nix-build --out-link result/fsharp images/fsharp.nix
 nix-build --out-link result/nim images/nim.nix
 nix-build --out-link result/nix images/nix.nix
 nix-build --out-link result/ocaml images/ocaml.nix
+nix-build --out-link result/perl images/pascal.nix
 nix-build --out-link result/perl images/perl.nix
 nix-build --out-link result/php images/php.nix
 nix-build --out-link result/python images/python.nix
