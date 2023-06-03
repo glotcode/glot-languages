@@ -3,7 +3,7 @@
 let
   codeRunnerSrc =
     builtins.fetchGit {
-      url = "git@github.com:glotcode/code-runner.git";
+      url = "https://github.com/glotcode/glot-images.git";
       ref = "main";
       rev = "15aae9e6b3473f42ed66898be9d100d9d78e04a7";
     };
