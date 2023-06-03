@@ -10,6 +10,7 @@ build_image {
   name = "glot/pascal";
   tag = "latest";
   installedPackages = [
+    pkgs.binutils
     pkgs.fpc
   ];
 }
