@@ -3,9 +3,9 @@
 let
   codeRunnerSrc =
     builtins.fetchGit {
-      url = "https://github.com/glotcode/glot-images.git";
+      url = "https://github.com/glotcode/code-runner.git";
       ref = "main";
-      rev = "15aae9e6b3473f42ed66898be9d100d9d78e04a7";
+      rev = "f5104dc9c7c3ab1fa4897eaed89d475e659a01ac";
     };
 
   codeRunner =
