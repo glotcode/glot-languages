@@ -12,6 +12,7 @@ nix-build --out-link result/clisp images/clisp.nix
 nix-build --out-link result/clojure images/clojure.nix
 nix-build --out-link result/crystal images/crystal.nix
 nix-build --out-link result/dlang images/dlang.nix
+nix-build --out-link result/dart images/dart.nix
 nix-build --out-link result/elixir images/elixir.nix
 nix-build --out-link result/elm images/elm.nix
 nix-build --out-link result/erlang images/erlang.nix
