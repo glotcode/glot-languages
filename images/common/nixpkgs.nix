@@ -2,8 +2,8 @@ let
   nixpkgs =
     builtins.fetchGit {
       url = "https://github.com/NixOS/nixpkgs";
-      ref = "refs/heads/nixos-unstable";
-      rev = "1d7db1b9e4cf1ee075a9f52e5c36f7b9f4207502";
+      ref = "refs/heads/release-24.05";
+      rev = "abd29679271a9fbcffe1dd640fc6c2a77957f5ed";
     };
 
   pkgs =
