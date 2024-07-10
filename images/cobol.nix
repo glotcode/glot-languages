@@ -10,6 +10,7 @@ build_image {
   name = "glot/cobol";
   tag = "latest";
   installedPackages = [
+    pkgs.gcc
     pkgs.gnu-cobol
   ];
 }
