@@ -41,6 +41,7 @@ pkgs.dockerTools.buildImage {
     ${pkgs.shadow}/bin/groupadd glot
     ${pkgs.shadow}/bin/useradd -d /home/glot -g glot -s /bin/bash glot
     ${run}
+    mkdir -p /tmp
     chmod 0777 /tmp
   '';
 
