@@ -2,9 +2,9 @@
 set -e
 
 for image in result/*; do
-  name="glot/${image}"
+  name="glot/$(basename $image)"
 
   echo "Pushing $name..."
-  #docker push "$image"
+  docker push "$name"
 done
 
