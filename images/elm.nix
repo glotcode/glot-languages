@@ -1,9 +1,9 @@
 let
   pkgs =
-    import ./common/nixpkgs.nix;
+    import ../common/nixpkgs.nix;
 
   build_image =
-    import ./common/build_image.nix;
+    import ../common/build_image.nix;
 
   elmRunner =
     import ./elm/elm-runner/default.nix { pkgs = pkgs; };
