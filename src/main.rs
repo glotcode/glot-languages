@@ -1,5 +1,5 @@
-pub mod language;
-pub mod utils;
+mod language;
+mod utils;
 
 fn main() {
     language::list().iter().for_each(|language| {

@@ -1,5 +1,5 @@
 [package]
-name = "glot-languages"
+name = "glot_languages"
 version = "0.1.0"
 edition = "2021"
 
