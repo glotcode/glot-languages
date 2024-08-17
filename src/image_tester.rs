@@ -10,30 +10,54 @@ use std::path::PathBuf;
 use std::process;
 use std::string;
 
-pub fn test_images() {
-    for language in language::list() {
-        let result = run_container(language);
+pub enum Test {
+    HelloWorld,
+    Version,
+}
+
+impl Test {
+    pub fn run(&self, language: Language) -> Result<RunResult, Error> {
+        match self {
+            Test::HelloWorld => run_hello_world(language),
+            Test::Version => run_version(language),
+        }
+    }
+}
+
+pub fn test_images(test: Test, languages: Vec<Language>) {
+    for language in languages {
+        let result = test.run(language);
 
         match result {
-            Ok(_) => print_success(language),
+            Ok(run_result) => print_success(language, run_result),
             Err(error) => print_failure(language, error),
         }
     }
 }
 
-fn run_container(language: Language) -> Result<(), Error> {
+fn run_hello_world(language: Language) -> Result<RunResult, Error> {
+    let run_request = prepare_hello_request(language);
+    let run_result = run_container(language, run_request)?;
+    check_hello_result(&run_result)?;
+    Ok(run_result)
+}
+
+fn run_version(language: Language) -> Result<RunResult, Error> {
+    let run_request = prepare_version_request(language);
+    let run_result = run_container(language, run_request)?;
+    check_version_result(&run_result)?;
+    Ok(run_result)
+}
+
+fn run_container(language: Language, run_request: RunRequest) -> Result<RunResult, Error> {
     let run_config = language.config().run_config();
     let command = format!("docker run --pull never --rm -i --read-only --tmpfs /tmp:rw,noexec,nosuid,size=65536k --tmpfs /home/glot:rw,exec,nosuid,uid=1000,gid=1000,size=131072k -u glot -w /home/glot {}", run_config.container_image);
-    let run_request = prepare_run_request(language);
     let stdin = serde_json::to_string(&run_request).map_err(Error::SerializeRequest)?;
 
     let options = Options { command, stdin };
     let cmd_output = run(options)?;
 
-    let run_result = get_run_result(cmd_output)?;
-    check_run_result(run_result)?;
-
-    Ok(())
+    get_run_result(cmd_output)
 }
 
 fn get_run_result(cmd_output: SuccessOutput) -> Result<RunResult, Error> {
@@ -62,12 +86,12 @@ impl fmt::Display for RunResult {
     }
 }
 
-fn print_success(language: Language) {
+fn print_success(language: Language, run_result: RunResult) {
     println!(
-        "[{}] {} ({})",
+        "[{}] {}: {}",
         green_text("SUCCESS"),
         language.config().id(),
-        language.config().run_config().container_image
+        run_result.stdout
     );
 }
 
@@ -81,7 +105,7 @@ fn print_failure(language: Language, error: Error) {
     );
 }
 
-fn prepare_run_request(language: Language) -> RunRequest {
+fn prepare_hello_request(language: Language) -> RunRequest {
     let config = language.config();
     let editor_config = config.editor_config();
 
@@ -99,18 +123,37 @@ fn prepare_run_request(language: Language) -> RunRequest {
     }
 }
 
-fn check_run_result(run_result: RunResult) -> Result<(), Error> {
+fn prepare_version_request(language: Language) -> RunRequest {
+    let config = language.config();
+    let editor_config = config.editor_config();
+
+    let files = vec![RequestFile {
+        name: editor_config.default_filename.clone(),
+        content: editor_config.example_code,
+    }];
+
+    RunRequest {
+        run_instructions: RunInstructions {
+            build_commands: vec![],
+            run_command: config.run_config().version_command,
+        },
+        files,
+        stdin: None,
+    }
+}
+
+fn check_hello_result(run_result: &RunResult) -> Result<(), Error> {
     if !run_result.error.is_empty() {
-        return Err(Error::RunResultErr(run_result));
+        return Err(Error::RunResultErr(run_result.clone()));
     }
 
-    check_stderr(&run_result)?;
-    check_stdout(&run_result.stdout)?;
+    check_hello_stderr(run_result)?;
+    check_hello_stdout(&run_result.stdout)?;
 
     Ok(())
 }
 
-fn check_stderr(run_result: &RunResult) -> Result<(), Error> {
+fn check_hello_stderr(run_result: &RunResult) -> Result<(), Error> {
     let expected_errors = [
         "Compiled in DEV mode. Follow the advice at https://elm-lang.org/0.19.1/optimize for better performance and smaller assets.\n"
     ];
@@ -122,13 +165,42 @@ fn check_stderr(run_result: &RunResult) -> Result<(), Error> {
     }
 }
 
-fn check_stdout(stdout: &str) -> Result<(), Error> {
+fn check_hello_stdout(stdout: &str) -> Result<(), Error> {
     let normalized_text = stdout.trim_end().replace('"', "").to_lowercase();
 
     if normalized_text == "hello world!" {
         Ok(())
     } else {
         Err(Error::NoHelloWorld(stdout.to_string()))
+    }
+}
+
+fn check_version_result(run_result: &RunResult) -> Result<(), Error> {
+    if !run_result.error.is_empty() {
+        return Err(Error::RunResultErr(run_result.clone()));
+    }
+
+    check_version_stderr(run_result)?;
+    check_version_stdout(&run_result.stdout)?;
+
+    Ok(())
+}
+
+fn check_version_stderr(run_result: &RunResult) -> Result<(), Error> {
+    if run_result.stderr.is_empty() {
+        Ok(())
+    } else {
+        Err(Error::RunResultStderr(run_result.clone()))
+    }
+}
+
+fn check_version_stdout(stdout: &str) -> Result<(), Error> {
+    if !stdout.is_empty() {
+        Ok(())
+    } else if stdout.contains('\n') {
+        Err(Error::VersionHasLineFeed(stdout.to_string()))
+    } else {
+        Err(Error::EmptyVersion)
     }
 }
 
@@ -166,6 +238,8 @@ pub enum Error {
     RunResultErr(RunResult),
     RunResultStderr(RunResult),
     NoHelloWorld(String),
+    EmptyVersion,
+    VersionHasLineFeed(String),
 }
 
 impl fmt::Display for Error {
@@ -201,6 +275,14 @@ impl fmt::Display for Error {
 
             Error::NoHelloWorld(err) => {
                 write!(f, "No 'Hello World!' in stdout. {}", err)
+            }
+
+            Error::EmptyVersion => {
+                write!(f, "Stdout is empty for version command.")
+            }
+
+            Error::VersionHasLineFeed(err) => {
+                write!(f, "Version has line feed. {}", err)
             }
         }
     }
@@ -344,4 +426,3 @@ fn green_text(s: &str) -> String {
 fn red_text(s: &str) -> String {
     format!("\x1b[91m{}\x1b[0m", s)
 }
-
