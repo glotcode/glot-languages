@@ -64,7 +64,8 @@ impl fmt::Display for RunResult {
 
 fn print_success(language: Language) {
     println!(
-        "[SUCCESS] {} ({})",
+        "[{}] {} ({})",
+        green_text("SUCCESS"),
         language.config().id(),
         language.config().run_config().container_image
     );
@@ -72,7 +73,8 @@ fn print_success(language: Language) {
 
 fn print_failure(language: Language, error: Error) {
     println!(
-        "[FAILURE] {} ({}) - {}",
+        "[{}] {} ({}) - {}",
+        red_text("FAILURE"),
         language.config().id(),
         language.config().run_config().container_image,
         error
@@ -334,3 +336,12 @@ pub fn get_output(output: process::Output) -> Result<SuccessOutput, OutputError>
         }))
     }
 }
+
+fn green_text(s: &str) -> String {
+    format!("\x1b[92m{}\x1b[0m", s)
+}
+
+fn red_text(s: &str) -> String {
+    format!("\x1b[91m{}\x1b[0m", s)
+}
+
