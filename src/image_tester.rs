@@ -23,7 +23,7 @@ pub fn test_images() {
 
 fn run_container(language: Language) -> Result<(), Error> {
     let run_config = language.config().run_config();
-    let command = format!("docker run --rm -i --read-only --tmpfs /tmp:rw,noexec,nosuid,size=65536k --tmpfs /home/glot:rw,exec,nosuid,uid=1000,gid=1000,size=131072k -u glot -w /home/glot {}", run_config.container_image);
+    let command = format!("docker run --pull never --rm -i --read-only --tmpfs /tmp:rw,noexec,nosuid,size=65536k --tmpfs /home/glot:rw,exec,nosuid,uid=1000,gid=1000,size=131072k -u glot -w /home/glot {}", run_config.container_image);
     let run_request = prepare_run_request(language);
     let stdin = serde_json::to_string(&run_request).map_err(Error::SerializeRequest)?;
 
