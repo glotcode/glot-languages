@@ -1,4 +1,3 @@
-use crate::language;
 use crate::language::Language;
 use crate::language::RunInstructions;
 use serde::Deserialize;
@@ -91,7 +90,7 @@ fn print_success(language: Language, run_result: RunResult) {
         "[{}] {}: {}",
         green_text("SUCCESS"),
         language.config().id(),
-        run_result.stdout
+        run_result.stdout.trim_end()
     );
 }
 
@@ -195,12 +194,12 @@ fn check_version_stderr(run_result: &RunResult) -> Result<(), Error> {
 }
 
 fn check_version_stdout(stdout: &str) -> Result<(), Error> {
-    if !stdout.is_empty() {
-        Ok(())
-    } else if stdout.contains('\n') {
+    if stdout.is_empty() {
+        Err(Error::EmptyVersion)
+    } else if stdout.trim_end().contains('\n') {
         Err(Error::VersionHasLineFeed(stdout.to_string()))
     } else {
-        Err(Error::EmptyVersion)
+        Ok(())
     }
 }
 
