@@ -124,19 +124,13 @@ fn prepare_hello_request(language: Language) -> RunRequest {
 
 fn prepare_version_request(language: Language) -> RunRequest {
     let config = language.config();
-    let editor_config = config.editor_config();
-
-    let files = vec![RequestFile {
-        name: editor_config.default_filename.clone(),
-        content: editor_config.example_code,
-    }];
 
     RunRequest {
         run_instructions: RunInstructions {
             build_commands: vec![],
             run_command: config.run_config().version_command,
         },
-        files,
+        files: vec![],
         stdin: None,
     }
 }
