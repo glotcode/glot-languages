@@ -44,12 +44,22 @@ fn get_run_result(cmd_output: SuccessOutput) -> Result<RunResult, Error> {
     }
 }
 
-#[derive(Deserialize)]
+#[derive(Clone, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct RunResult {
     stdout: String,
     stderr: String,
     error: String,
+}
+
+impl fmt::Display for RunResult {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(
+            f,
+            "stdout: '«{}», stderr: «{}», error: «{}»",
+            self.stdout, self.stderr, self.error
+        )
+    }
 }
 
 fn print_success(language: Language) {
@@ -89,34 +99,34 @@ fn prepare_run_request(language: Language) -> RunRequest {
 
 fn check_run_result(run_result: RunResult) -> Result<(), Error> {
     if !run_result.error.is_empty() {
-        return Err(Error::RunResultErr(run_result.error));
+        return Err(Error::RunResultErr(run_result));
     }
 
-    check_stderr(&run_result.stderr)?;
+    check_stderr(&run_result)?;
     check_stdout(&run_result.stdout)?;
 
     Ok(())
 }
 
-fn check_stderr(err: &str) -> Result<(), Error> {
+fn check_stderr(run_result: &RunResult) -> Result<(), Error> {
     let expected_errors = [
         "Compiled in DEV mode. Follow the advice at https://elm-lang.org/0.19.1/optimize for better performance and smaller assets.\n"
     ];
 
-    if err.is_empty() || expected_errors.contains(&err) {
+    if run_result.stderr.is_empty() || expected_errors.contains(&run_result.stderr.as_str()) {
         Ok(())
     } else {
-        Err(Error::RunResultStderr(err.to_string()))
+        Err(Error::RunResultStderr(run_result.clone()))
     }
 }
 
-fn check_stdout(text: &str) -> Result<(), Error> {
-    let normalized_text = text.trim_end().replace('"', "").to_lowercase();
+fn check_stdout(stdout: &str) -> Result<(), Error> {
+    let normalized_text = stdout.trim_end().replace('"', "").to_lowercase();
 
     if normalized_text == "hello world!" {
         Ok(())
     } else {
-        Err(Error::NoHelloWorld(text.to_string()))
+        Err(Error::NoHelloWorld(stdout.to_string()))
     }
 }
 
@@ -145,15 +155,14 @@ pub fn run(options: Options) -> Result<SuccessOutput, Error> {
     get_output(output).map_err(Error::Output)
 }
 
-#[derive(Debug)]
 pub enum Error {
     SerializeRequest(serde_json::Error),
     Execute(ExecuteError),
     Output(OutputError),
     DeserializeResult(serde_json::Error),
     NonEmptyStderr(String),
-    RunResultErr(String),
-    RunResultStderr(String),
+    RunResultErr(RunResult),
+    RunResultStderr(RunResult),
     NoHelloWorld(String),
 }
 
