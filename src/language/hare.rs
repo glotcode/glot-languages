@@ -27,7 +27,7 @@ impl LanguageConfig for Hare {
     }
 
     fn file_extension(&self) -> String {
-        "hare".to_string()
+        "ha".to_string()
     }
 
     fn editor_config(&self) -> EditorConfig {
