@@ -39,7 +39,7 @@ impl LanguageConfig for Raku {
     fn run_config(&self) -> RunConfig {
         RunConfig {
             container_image: "glot/raku:latest".to_string(),
-            version_command: "perl6 --version".to_string(),
+            version_command: "raku --version | head -n 1".to_string(),
         }
     }
 
