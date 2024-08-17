@@ -1,8 +1,8 @@
-use serde::Serialize;
-
 use crate::language;
 use crate::language::Language;
 use crate::language::RunInstructions;
+use serde::Deserialize;
+use serde::Serialize;
 use std::fmt;
 use std::io;
 use std::io::Write;
@@ -28,13 +28,28 @@ fn run_container(language: Language) -> Result<(), Error> {
     let stdin = serde_json::to_string(&run_request).map_err(Error::SerializeRequest)?;
 
     let options = Options { command, stdin };
+    let cmd_output = run(options)?;
 
-    let output = run(options)?;
-
-    check_stderr(&output.stderr)?;
-    check_stdout(&output.stdout)?;
+    let run_result = get_run_result(cmd_output)?;
+    check_run_result(run_result)?;
 
     Ok(())
+}
+
+fn get_run_result(cmd_output: SuccessOutput) -> Result<RunResult, Error> {
+    if !cmd_output.stderr.is_empty() {
+        Err(Error::NonEmptyStderr(cmd_output.stderr))
+    } else {
+        serde_json::from_str(&cmd_output.stdout).map_err(Error::DeserializeResult)
+    }
+}
+
+#[derive(Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct RunResult {
+    stdout: String,
+    stderr: String,
+    error: String,
 }
 
 fn print_success(language: Language) {
@@ -72,6 +87,17 @@ fn prepare_run_request(language: Language) -> RunRequest {
     }
 }
 
+fn check_run_result(run_result: RunResult) -> Result<(), Error> {
+    if !run_result.error.is_empty() {
+        return Err(Error::RunResultErr(run_result.error));
+    }
+
+    check_stderr(&run_result.stderr)?;
+    check_stdout(&run_result.stdout)?;
+
+    Ok(())
+}
+
 fn check_stderr(err: &str) -> Result<(), Error> {
     let expected_errors = [
         "Compiled in DEV mode. Follow the advice at https://elm-lang.org/0.19.1/optimize for better performance and smaller assets.\n"
@@ -80,7 +106,7 @@ fn check_stderr(err: &str) -> Result<(), Error> {
     if err.is_empty() || expected_errors.contains(&err) {
         Ok(())
     } else {
-        Err(Error::NonEmptyStderr(err.to_string()))
+        Err(Error::RunResultStderr(err.to_string()))
     }
 }
 
@@ -124,7 +150,10 @@ pub enum Error {
     SerializeRequest(serde_json::Error),
     Execute(ExecuteError),
     Output(OutputError),
+    DeserializeResult(serde_json::Error),
     NonEmptyStderr(String),
+    RunResultErr(String),
+    RunResultStderr(String),
     NoHelloWorld(String),
 }
 
@@ -143,8 +172,20 @@ impl fmt::Display for Error {
                 write!(f, "Error in output from command. {}", err)
             }
 
+            Error::DeserializeResult(err) => {
+                write!(f, "Failed to deserialize run result. {}", err)
+            }
+
             Error::NonEmptyStderr(err) => {
                 write!(f, "Non-empty stderr. {}", err)
+            }
+
+            Error::RunResultErr(err) => {
+                write!(f, "Error in run result. {}", err)
+            }
+
+            Error::RunResultStderr(err) => {
+                write!(f, "Non-empty stderr in run result. {}", err)
             }
 
             Error::NoHelloWorld(err) => {
