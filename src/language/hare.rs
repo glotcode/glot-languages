@@ -43,7 +43,7 @@ impl LanguageConfig for Hare {
     fn run_config(&self) -> RunConfig {
         RunConfig {
             container_image: "glot/hare:latest".to_string(),
-            version_command: "hare --version".to_string(),
+            version_command: "hare version".to_string(),
         }
     }
 
