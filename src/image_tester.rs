@@ -95,6 +95,7 @@ fn check_stdout(text: &str) -> Result<(), Error> {
 }
 
 #[derive(Serialize)]
+#[serde(rename_all = "camelCase")]
 struct RunRequest {
     run_instructions: RunInstructions,
     files: Vec<RequestFile>,
@@ -102,6 +103,7 @@ struct RunRequest {
 }
 
 #[derive(Serialize)]
+#[serde(rename_all = "camelCase")]
 struct RequestFile {
     name: String,
     content: String,
