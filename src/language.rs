@@ -46,6 +46,7 @@ pub mod zig;
 use maud::Markup;
 use serde::Deserialize;
 use serde::Serialize;
+use std::fmt;
 use std::path::PathBuf;
 use std::str::FromStr;
 
@@ -244,4 +245,20 @@ pub struct RunConfig {
 pub struct RunInstructions {
     pub build_commands: Vec<String>,
     pub run_command: String,
+}
+
+impl RunInstructions {
+    pub fn is_empty(&self) -> bool {
+        self.build_commands.is_empty() && self.run_command.is_empty()
+    }
+}
+
+impl fmt::Display for RunInstructions {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        let str = [self.build_commands.clone(), vec![self.run_command.clone()]]
+            .concat()
+            .join(" && ");
+
+        write!(f, "{}", str)
+    }
 }
