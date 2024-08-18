@@ -239,7 +239,7 @@ pub struct RunConfig {
     pub version_command: String,
 }
 
-#[derive(Clone, Serialize, Deserialize)]
+#[derive(Clone, Serialize, Deserialize, PartialEq, Eq)]
 #[serde(rename_all = "camelCase")]
 pub struct RunInstructions {
     pub build_commands: Vec<String>,
