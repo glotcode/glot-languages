@@ -5,7 +5,7 @@ let
     builtins.fetchGit {
       url = "https://github.com/glotcode/code-runner.git";
       ref = "main";
-      rev = "f5ed5bce956e4da607bbb94d692678f3a807a917";
+      rev = "3b87378c36bd457624cc15c1c2f0dac32f33e69f";
     };
 
   codeRunner =
