@@ -29,9 +29,37 @@ fn main() {
     }
 }
 
+fn capitalize_first_letter(s: &str) -> String {
+    let mut chars = s.chars();
+    match chars.next() {
+        Some(first) => first.to_uppercase().collect::<String>() + chars.as_str(),
+        None => String::new(),
+    }
+}
+
+fn elm_name(s: &str) -> String {
+    s.replace("typescript", "TypeScript")
+        .replace("coffeescript", "CoffeeScript")
+        .replace("javascript", "JavaScript")
+}
+
 fn print_languages() {
     language::list().iter().for_each(|language| {
-        println!("{}", language.config().id());
+        let name = capitalize_first_letter(&elm_name(&language.config().id()));
+        let fname = language.config().editor_config().default_filename;
+
+        println!("{} -> {}", name, fname)
+    })
+}
+
+fn print_example_code() {
+    language::list().iter().for_each(|language| {
+        let name = capitalize_first_letter(&elm_name(&language.config().id()));
+        let code = language.config().editor_config().example_code;
+
+        println!("        {} ->", name);
+        println!("            \"\"\"\n{}\n\"\"\"", code);
+        println!("")
     });
 }
 
