@@ -26,6 +26,7 @@ pub mod javascript;
 pub mod julia;
 pub mod kotlin;
 pub mod lua;
+pub mod luau;
 pub mod mercury;
 pub mod nim;
 pub mod nix;
@@ -81,6 +82,7 @@ pub enum Language {
     Julia,
     Kotlin,
     Lua,
+    Luau,
     Mercury,
     Nim,
     Nix,
@@ -130,6 +132,7 @@ impl Language {
             Self::Julia => Box::new(julia::Julia),
             Self::Kotlin => Box::new(kotlin::Kotlin),
             Self::Lua => Box::new(lua::Lua),
+            Self::Luau => Box::new(luau::Luau),
             Self::Mercury => Box::new(mercury::Mercury),
             Self::Nim => Box::new(nim::Nim),
             Self::Nix => Box::new(nix::Nix),
@@ -194,6 +197,7 @@ pub fn list() -> Vec<Language> {
         Language::Julia,
         Language::Kotlin,
         Language::Lua,
+        Language::Luau,
         Language::Mercury,
         Language::Nim,
         Language::Nix,
